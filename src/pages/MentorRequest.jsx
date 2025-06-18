@@ -9,14 +9,12 @@ const MentorRequest = () => {
   useEffect(() => {
     getMentorData();
   }, []);
-  const [showModal, setShowModal] = useState(false);
   const [mentorList, setMentorList] = useState([]);
   const getMentorData = () => {
     axios
       .get("https://homentor-backend.onrender.com/api/mentor/pending-mentors")
       .then((res) => {
-        setMentorList(res.data.data);
-        console.log(res.data.data);
+        setMentorList(res.data.data.reverse());
       });
   };
 

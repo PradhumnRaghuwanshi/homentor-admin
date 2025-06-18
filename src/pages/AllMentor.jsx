@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../comp/AdminLayout";
+import MentorEditModal from "../comp/MentorEditModal";
 
 const AllMentor = () => {
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -14,8 +15,7 @@ const AllMentor = () => {
     axios
       .get("https://homentor-backend.onrender.com/api/mentor/approved-mentors")
       .then((res) => {
-        setMentorList(res.data.data);
-        console.log(res.data.data);
+        setMentorList(res.data.data.reverse());
       });
   };
 
@@ -44,24 +44,24 @@ const AllMentor = () => {
     setIsEditing(false);
   };
 
-  const handleToggle = async (value) => {
+  const handleToggle = (mentor) => {
     try {
-      await fetch(
+      axios.put(
         `https://homentor-backend.onrender.com/api/mentor/${mentor._id}`,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ showOnWebsite: value }),
+         showOnWebsite: !mentor.showOnWebsite ,
         }
-      );
+      ).then(()=>{
+        alert("Mentor Updated")
+      getMentorData()
+      })
+      
     } catch (error) {
       console.error("Failed to update visibility:", error);
     }
   };
   const [shareList, setShareList] = useState([]);
-
+  const link = "https://homentor.onrender.com/selected-mentors?id=" + shareList.join(",");
   return (
     <AdminLayout>
       <div className="p-6 bg-gray-50 min-h-screen">
@@ -69,15 +69,14 @@ const AllMentor = () => {
           All Approved Mentors
         </h2>
         {shareList.length ? (
-                  <button
-                  className="w-[200px] m-1  mb-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow transition duration-200 active:scale-95"
-                  style={{ width: 200 }}
-                    onClick={() => navigator.clipboard.writeText(link)}
-                  >
-                    Copy Share Link
-                    
-                  </button>
-          ) : null}
+          <button
+            className="w-[200px] m-1  mb-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow transition duration-200 active:scale-95"
+            style={{ width: 200 }}
+            onClick={() => navigator.clipboard.writeText(link)}
+          >
+            Copy Share Link
+          </button>
+        ) : null}
         <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
           <table className="min-w-full text-sm text-gray-700">
             <thead className="bg-gray-100 text-xs uppercase text-gray-500">
@@ -169,7 +168,7 @@ const AllMentor = () => {
                   </td>
                   <td className="px-4 py-3">
                     <button
-                      onClick={() => handleToggle(!mentor.showOnWebsite)}
+                      onClick={() => handleToggle(mentor)}
                       className={`w-12 h-6 rounded-full p-1 flex items-center transition ${
                         mentor.showOnWebsite ? "bg-green-500" : "bg-gray-300"
                       }`}
@@ -190,12 +189,12 @@ const AllMentor = () => {
                     >
                       View
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleStatus(mentor._id, "Approved")}
                       className="px-2 py-1 text-green-600 hover:underline"
                     >
                       Approve
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => handleStatus(mentor._id, "Rejected")}
                       className="px-2 py-1 text-red-600 hover:underline"
@@ -210,47 +209,10 @@ const AllMentor = () => {
         </div>
 
         {/* You already have a nice modal; just ensure these: */}
-        {selectedMentor && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-              className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
-              onClick={() => setSelectedMentor(null)}
-            ></div>
+        {selectedMentor  && (
+                  <MentorEditModal onSave={handleSaveEdit} selectedMentor={selectedMentor} setSelectedMentor={setSelectedMentor}/>
 
-            <div className="relative z-10 bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold text-gray-800">
-                  Mentor Details
-                </h2>
-                <div className="flex items-center gap-2">
-                  {!isEditing ? (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600 text-sm"
-                    >
-                      Edit
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleSaveEdit}
-                      className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 text-sm"
-                    >
-                      Save
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setSelectedMentor(null)}
-                    className="text-gray-700 text-lg font-bold"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-
-              {/* Existing modal details layout goes here (unchanged) */}
-              {/* ⬇ Keep your detailed grid display as is; it’s already structured well. Just ensure consistent margins and padding. */}
-            </div>
-          </div>
+          
         )}
       </div>
     </AdminLayout>
