@@ -511,43 +511,60 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
 
               {/* Bio */}
               <div className="space-y-1">
+                <div className="flex gap-2 items-center">
+<input
+                type="checkbox"
+                onClick={()=> setSelectedMentor({
+                  ...selectedMentor,
+                  adminBriefVisible : false
+                })}
+                checked={selectedMentor?.adminBriefVisible ? false : true}></input>
                 <label
-                  htmlFor="bio"
+                  htmlFor="brief"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Bio
+                  Brief
                 </label>
+                </div>
+                
                 <textarea
                   type="text"
-                  id="bio"
-                  value={selectedMentor.bio || ""}
+                  id="brief"
+                  value={selectedMentor.brief || ""}
                   onChange={(e) =>
                     setSelectedMentor({
                       ...selectedMentor,
-                      bio: e.target.value,
+                      brief: e.target.value,
                     })
                   }
                   className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Mentor Bio"
+                  placeholder="Mentor Brief"
                 />
               </div>
 
-              {/*Admin - Bio */}
+              {/*Admin - Brief */}
               <div className="space-y-1">
+                <div className="flex gap-2 items-center">
+<input type="checkbox" onClick={()=> setSelectedMentor({
+                  ...selectedMentor,
+                  adminBriefVisible : true
+                })} checked={selectedMentor?.adminBriefVisible ? true : false}></input>
                 <label
-                  htmlFor="adminBio"
+                  htmlFor="adminBrief"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Admin - Bio
+                  Admin - Brief
                 </label>
+                </div>
+                
                 <textarea
                   type="text"
-                  id="adminBio"
-                  value={selectedMentor.adminBio || ""}
+                  id="adminBrief"
+                  value={selectedMentor.adminBrief || ""}
                   onChange={(e) =>
                     setSelectedMentor({
                       ...selectedMentor,
-                      adminBio: e.target.value,
+                      adminBrief: e.target.value,
                     })
                   }
                   className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
