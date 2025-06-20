@@ -62,15 +62,18 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
     "Computer Science",
   ];
 
-  const handleUpdate = ()=>{
-    axios.put(`https://homentor-backend.onrender.com/api/mentor/${selectedMentor._id}`, selectedMentor)
+  const handleUpdate = () => {
+    axios
+      .put(
+        `https://homentor-backend.onrender.com/api/mentor/${selectedMentor._id}`,
+        selectedMentor
+      )
       .then((res) => {
-        setIsEditing(false)
+        setIsEditing(false);
         alert("User Status Updated");
         getMentorData();
-        
       });
-  }
+  };
   return (
     selectedMentor && (
       <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -497,11 +500,13 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
                 <input
                   type="number"
                   id="salary"
-                  value={selectedMentor.salary || ""}
+                  value={selectedMentor.teachingModes.homeTuition.monthlyPrice || ""}
                   onChange={(e) =>
                     setSelectedMentor({
                       ...selectedMentor,
-                      salary: parseInt(e.target.value),
+                      teachingModes: {
+                        homeTuition: { monthlyPrice: parseInt(e.target.value) },
+                      },
                     })
                   }
                   className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
@@ -512,21 +517,24 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
               {/* Bio */}
               <div className="space-y-1">
                 <div className="flex gap-2 items-center">
-<input
-                type="checkbox"
-                onClick={()=> setSelectedMentor({
-                  ...selectedMentor,
-                  adminBriefVisible : false
-                })}
-                checked={selectedMentor?.adminBriefVisible ? false : true}></input>
-                <label
-                  htmlFor="brief"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Brief
-                </label>
+                  <input
+                    type="checkbox"
+                    onClick={() =>
+                      setSelectedMentor({
+                        ...selectedMentor,
+                        adminBriefVisible: false,
+                      })
+                    }
+                    checked={selectedMentor?.adminBriefVisible ? false : true}
+                  ></input>
+                  <label
+                    htmlFor="brief"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Brief
+                  </label>
                 </div>
-                
+
                 <textarea
                   type="text"
                   id="brief"
@@ -545,18 +553,24 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
               {/*Admin - Brief */}
               <div className="space-y-1">
                 <div className="flex gap-2 items-center">
-<input type="checkbox" onClick={()=> setSelectedMentor({
-                  ...selectedMentor,
-                  adminBriefVisible : true
-                })} checked={selectedMentor?.adminBriefVisible ? true : false}></input>
-                <label
-                  htmlFor="adminBrief"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Admin - Brief
-                </label>
+                  <input
+                    type="checkbox"
+                    onClick={() =>
+                      setSelectedMentor({
+                        ...selectedMentor,
+                        adminBriefVisible: true,
+                      })
+                    }
+                    checked={selectedMentor?.adminBriefVisible ? true : false}
+                  ></input>
+                  <label
+                    htmlFor="adminBrief"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Admin - Brief
+                  </label>
                 </div>
-                
+
                 <textarea
                   type="text"
                   id="adminBrief"
