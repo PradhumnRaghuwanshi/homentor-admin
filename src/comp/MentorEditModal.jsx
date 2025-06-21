@@ -426,6 +426,16 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
 
                 {/* Teaching Experience */}
                 <div>
+                  <input
+                    checked={selectedMentor.experienceDisplay}
+                    type="checkbox"
+                    onClick={() => {
+                      setSelectedMentor({
+                        ...selectedMentor,
+                        experienceDisplay: selectedMentor?.experienceDisplay,
+                      });
+                    }}
+                  ></input>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Teaching Experience
                   </label>
@@ -500,7 +510,9 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
                 <input
                   type="number"
                   id="salary"
-                  value={selectedMentor.teachingModes.homeTuition.monthlyPrice || ""}
+                  value={
+                    selectedMentor.teachingModes.homeTuition.monthlyPrice || ""
+                  }
                   onChange={(e) =>
                     setSelectedMentor({
                       ...selectedMentor,
