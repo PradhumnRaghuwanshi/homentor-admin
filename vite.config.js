@@ -5,5 +5,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+    base: '/', // 👈 This ensures correct path resolution on Render
   plugins: [react(), tailwindcss()],
 })
