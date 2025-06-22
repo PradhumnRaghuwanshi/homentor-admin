@@ -32,6 +32,24 @@ const AllMentor = () => {
   };
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isPriceEditing, setIsPriceEditing] = useState(false);
+  const [price, setPrice] = useState();
+  const [isModified, setIsModified] = useState(false);
+  const handleSave = (mentor) => {
+    axios
+      .put(`https://homentor-backend.onrender.com/api/mentor/${mentor._id}`, {
+        teachingModes: {
+          homeTuition: {
+            monthlyPrice: price,
+          },
+        },
+      })
+      .then((res) => {
+        getMentorData();
+        setIsPriceEditing(false);
+        setIsModified(false);
+      });
+  };
   const [editData, setEditData] = useState({ ...selectedMentor });
   const updateField = (field, value) => {
     setEditData((prev) => ({ ...prev, [field]: value }));
@@ -46,22 +64,21 @@ const AllMentor = () => {
 
   const handleToggle = (mentor) => {
     try {
-      axios.put(
-        `https://homentor-backend.onrender.com/api/mentor/${mentor._id}`,
-        {
-         showOnWebsite: !mentor.showOnWebsite ,
-        }
-      ).then(()=>{
-        alert("Mentor Updated")
-      getMentorData()
-      })
-      
+      axios
+        .put(`https://homentor-backend.onrender.com/api/mentor/${mentor._id}`, {
+          showOnWebsite: !mentor.showOnWebsite,
+        })
+        .then(() => {
+          alert("Mentor Updated");
+          getMentorData();
+        });
     } catch (error) {
       console.error("Failed to update visibility:", error);
     }
   };
   const [shareList, setShareList] = useState([]);
-  const link = "https://homentor.onrender.com/selected-mentors?id=" + shareList.join(",");
+  const link =
+    "https://homentor.onrender.com/selected-mentors?id=" + shareList.join(",");
   return (
     <AdminLayout>
       <div className="p-6 bg-gray-50 min-h-screen">
@@ -157,8 +174,34 @@ const AllMentor = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm">
-                    ₹{mentor?.teachingModes?.homeTuition?.monthlyPrice || "--"}
+                  <td className="px-4 py-3 text-sm cursor-pointer">
+                    {isPriceEditing ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          className="w-24 border rounded px-2 py-1 text-sm"
+                          value={price}
+                          onChange={(e) => {
+                            setPrice(e.target.value);
+                            setIsModified(true);
+                          }}
+                        />
+                        {isModified && (
+                          <button
+                            onClick={() => {handleSave(mentor);setPrice(mentor?.teachingModes?.homeTuition?.monthlyPrice)}}
+                            className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+                          >
+                            Update
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <span onClick={() => setIsPriceEditing(true)}>
+                        ₹
+                        {mentor?.teachingModes?.homeTuition?.monthlyPrice ||
+                          "--"}
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div>{mentor.location?.area}</div>
@@ -209,10 +252,13 @@ const AllMentor = () => {
         </div>
 
         {/* You already have a nice modal; just ensure these: */}
-        {selectedMentor  && (
-                  <MentorEditModal onSave={handleSaveEdit} selectedMentor={selectedMentor} setSelectedMentor={setSelectedMentor}/>
-
-          
+        {selectedMentor && (
+          <MentorEditModal
+            getMentorData={getMentorData}
+            onSave={handleSaveEdit}
+            selectedMentor={selectedMentor}
+            setSelectedMentor={setSelectedMentor}
+          />
         )}
       </div>
     </AdminLayout>

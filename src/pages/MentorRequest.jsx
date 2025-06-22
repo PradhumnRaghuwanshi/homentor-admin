@@ -119,7 +119,7 @@ const MentorRequest = () => {
         </div>
 
         {/* Modal */}
-        <MentorEditModal onSave={handleSaveEdit} selectedMentor={selectedMentor} setSelectedMentor={setSelectedMentor}/>
+        <MentorEditModal getMentorData={getMentorData} onSave={handleSaveEdit} selectedMentor={selectedMentor} setSelectedMentor={setSelectedMentor}/>
       </div>
     </AdminLayout>
   );

@@ -3,9 +3,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 
-const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
+const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave, getMentorData={getMentorData} }) => {
   const [isEditing, setIsEditing] = useState(false);
-  // const [selectedMentor, setSelectedMentor] = useState({ ...selectedMentor });
   console.log(selectedMentor);
   const updateField = (fieldPath, value) => {
     setSelectedMentor((prev) => {
@@ -69,9 +68,10 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
         selectedMentor
       )
       .then((res) => {
+        getMentorData();
+        setSelectedMentor(undefined)
         setIsEditing(false);
         alert("User Status Updated");
-        getMentorData();
       });
   };
   return (
@@ -427,12 +427,12 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
                 {/* Teaching Experience */}
                 <div>
                   <input
-                    checked={selectedMentor.experienceDisplay}
+                    checked={selectedMentor?.experienceDisplay}
                     type="checkbox"
                     onClick={() => {
                       setSelectedMentor({
                         ...selectedMentor,
-                        experienceDisplay: selectedMentor?.experienceDisplay,
+                        experienceDisplay: !selectedMentor?.experienceDisplay,
                       });
                     }}
                   ></input>
@@ -508,7 +508,6 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
                   Monthly Salary (₹)
                 </label>
                 <input
-                  type="number"
                   id="salary"
                   value={
                     selectedMentor.teachingModes.homeTuition.monthlyPrice || ""
@@ -517,7 +516,7 @@ const MentorEditModal = ({ selectedMentor, setSelectedMentor, onSave }) => {
                     setSelectedMentor({
                       ...selectedMentor,
                       teachingModes: {
-                        homeTuition: { monthlyPrice: parseInt(e.target.value) },
+                        homeTuition: { monthlyPrice: e.target.value },
                       },
                     })
                   }
