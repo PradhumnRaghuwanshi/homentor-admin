@@ -24,7 +24,7 @@ const navLinks = [
   { label: "Utilities", icon: Zap, to: "/Utilities" },
   // { label: "Mess", icon: Utensils, to: "/Mess" },
   // { label: "Notices", icon: ScrollText, to: "/Notices" },
-  { label: "Settings", icon: Settings, to: "/Settings" },
+  { label: "Settings", icon: Settings, to: "/setting" },
 ];
 
 export default function AdminSidebar() {
