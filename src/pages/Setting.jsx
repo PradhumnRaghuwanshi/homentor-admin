@@ -17,7 +17,6 @@ const Setting = () => {
         setCallingNo(res.data.data[0].callingNo)
       });
   };
-
   
   const [callingNo, setCallingNo] = useState("")
   const postNumber = () => {
