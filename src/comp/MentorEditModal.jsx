@@ -2,6 +2,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
+import TeachingPreferenceMatrix from "./TeachingPreferenceMatrix";
+import TeachingModesDisplay from "./TeachingModesDisplay";
 
 const MentorEditModal = ({
   selectedMentor,
@@ -187,7 +189,6 @@ const MentorEditModal = ({
                 </div>
               </div>
             </div>
-
             <div className="bg-white p-6 rounded-2xl shadow-md mt-6">
               <h3 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">
                 Documents & Media
@@ -201,11 +202,21 @@ const MentorEditModal = ({
                   <div className="flex items-center justify-between bg-gray-50 p-2 rounded-lg border">
                     <div className="flex items-center space-x-4">
                       {selectedMentor?.profilePhoto ? (
-                        <img
-                          src={selectedMentor?.profilePhoto}
-                          alt="Profile"
-                          className="w-16 h-16  object-cover border"
-                        />
+                        <div>
+                          <img
+                            src={selectedMentor?.profilePhoto}
+                            alt="Profile"
+                            className=" h-16  object-cover border"
+                          />
+                          <a
+                            href={selectedMentor?.profilePhoto}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 underline text-sm"
+                          >
+                            View Photo
+                          </a>
+                        </div>
                       ) : (
                         <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
                           No Photo
@@ -234,11 +245,21 @@ const MentorEditModal = ({
                   </label>
                   <div className="flex items-center justify-between bg-gray-50 p-2 rounded-lg border">
                     {selectedMentor?.mentorId ? (
-                      <img
-                        src={selectedMentor?.mentorId}
-                        alt="MentorID"
-                        className="w-16 h-16 object-cover border"
-                      />
+                      <div>
+                        <img
+                          src={selectedMentor?.mentorId}
+                          alt="MentorID"
+                          className="h-16 object-cover border"
+                        />
+                        <a
+                          href={selectedMentor?.profilePhoto}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-600 underline text-sm"
+                        >
+                          View ID
+                        </a>
+                      </div>
                     ) : (
                       <span className="text-sm text-gray-500">No ID</span>
                     )}
@@ -442,7 +463,10 @@ const MentorEditModal = ({
                 </div>
               </div>
             </div>
-
+            <TeachingModesDisplay
+              mentorData={selectedMentor}
+              setSelectedMentor={selectedMentor}
+            />
             <div className="bg-white p-4 rounded-2xl shadow-sm mt-6 space-y-4">
               <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
                 Teacher Ratings
@@ -490,32 +514,6 @@ const MentorEditModal = ({
                   }
                   className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter rating (e.g., 4.5)"
-                />
-              </div>
-
-              {/* Salary */}
-              <div className="space-y-1">
-                <label
-                  htmlFor="salary"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Monthly Salary (₹)
-                </label>
-                <input
-                  id="salary"
-                  value={
-                    selectedMentor?.teachingModes?.homeTuition?.monthlyPrice || ""
-                  }
-                  onChange={(e) =>
-                    setSelectedMentor({
-                      ...selectedMentor,
-                      teachingModes: {
-                        homeTuition: { monthlyPrice: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter salary amount"
                 />
               </div>
 
@@ -615,420 +613,136 @@ const MentorEditModal = ({
                 />
               </div>
             </div>
-            <div className="bg-white p-4 rounded-2xl shadow-sm mt-6 space-y-6">
-              {/* Location */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">
-                  Location
-                </h3>
 
-                <div className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="area"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Area / Locality
-                    </label>
-                    <input
-                      type="text"
-                      id="area"
-                      className="w-full border rounded-md px-3 py-2 text-sm"
-                      placeholder="e.g., Tilak Nagar"
-                      value={selectedMentor?.location?.area || ""}
-                      onChange={(e) =>
-                        updateField("location.area", e.target.value)
-                      }
-                    />
-                  </div>
+            {/* Location */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">
+                Location
+              </h3>
 
-                  <div>
-                    <label
-                      htmlFor="city"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      className="w-full border rounded-md px-3 py-2 text-sm"
-                      placeholder="e.g., Indore"
-                      value={selectedMentor?.location?.city || ""}
-                      onChange={(e) =>
-                        updateField("location.city", e.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="state"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      State
-                    </label>
-                    <input
-                      type="text"
-                      id="state"
-                      className="w-full border rounded-md px-3 py-2 text-sm"
-                      placeholder="e.g., Madhya Pradesh"
-                      value={selectedMentor?.location?.state || ""}
-                      onChange={(e) =>
-                        updateField("location.state", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Teaching Preference */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">
-                  Teaching Preference
-                </h3>
-
-                {/* Teaching Mode */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Preferred Mode
-                  </label>
-                  <select
-                    value={selectedMentor?.teachingMode || ""}
-                    onChange={(e) =>
-                      updateField("teachingMode", e.target.value)
-                    }
-                    className="w-full border rounded-md px-3 py-2 text-sm"
+              <div className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="area"
+                    className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    <option value="">Select Mode</option>
-                    <option value="Online">Online</option>
-                    <option value="Offline">Offline</option>
-                    <option value="Both">Both</option>
-                  </select>
-                </div>
-
-                {/* Available Days */}
-                <div className="space-y-2 mt-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Available Days
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                      "Sunday",
-                    ].map((day) => (
-                      <label
-                        key={day}
-                        className="flex items-center text-sm gap-2"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedMentor?.availableDays?.includes(day)}
-                          onChange={(e) => {
-                            const updatedDays = e.target.checked
-                              ? [...(selectedMentor?.availableDays || []), day]
-                              : selectedMentor?.availableDays?.filter(
-                                  (d) => d !== day
-                                );
-                            updateField("availableDays", updatedDays);
-                          }}
-                        />
-                        {day}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-white p-4 rounded-2xl shadow-sm mt-6">
-                  <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
-                    Teaching Preferences
-                  </h3>
-
-                  {Object.entries(selectedMentor?.teachingPreferences || {}).map(
-                    ([level, classMap]) => {
-                      // Get list of all classes
-                      const allClasses = Object.keys(classMap);
-                      // Get all unique subjects
-                      const allSubjects = Array.from(
-                        new Set(Object.values(classMap).flat())
-                      );
-
-                      return (
-                        <div key={level} className="mb-8 overflow-auto">
-                          <h4 className="text-md font-semibold text-blue-700 capitalize mb-3">
-                            {level}
-                          </h4>
-
-                          <table className="w-full min-w-[600px] text-sm border border-gray-300">
-                            <thead className="bg-blue-50">
-                              <tr>
-                                <th className="border px-3 py-2 text-left">
-                                  Subject
-                                </th>
-                                {allClasses.map((className) => (
-                                  <th
-                                    key={className}
-                                    className="border px-3 py-2 text-center"
-                                  >
-                                    {className
-                                      .replace(/-/g, " to ")
-                                      .replace("class", "Class")}
-                                  </th>
-                                ))}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {allSubjects.map((subject) => (
-                                <tr key={subject}>
-                                  <td className="border px-3 py-2 font-medium">
-                                    {subject}
-                                  </td>
-                                  {allClasses.map((className) => {
-                                    const isChecked =
-                                      selectedMentor?.teachingPreferences?.[
-                                        level
-                                      ]?.[className]?.includes(subject) ||
-                                      false;
-
-                                    return (
-                                      <td
-                                        key={className}
-                                        className="border px-3 py-2 text-center"
-                                      >
-                                        <input
-                                          type="checkbox"
-                                          checked={isChecked}
-                                          onChange={(e) => {
-                                            const newPreferences = {
-                                              ...selectedMentor?.teachingPreferences,
-                                            };
-                                            const classSubjects =
-                                              newPreferences[level][
-                                                className
-                                              ] || [];
-
-                                            if (e.target.checked) {
-                                              newPreferences[level][className] =
-                                                [
-                                                  ...new Set([
-                                                    ...classSubjects,
-                                                    subject,
-                                                  ]),
-                                                ];
-                                            } else {
-                                              newPreferences[level][className] =
-                                                classSubjects.filter(
-                                                  (s) => s !== subject
-                                                );
-                                            }
-
-                                            updateField(
-                                              "teachingPreferences",
-                                              newPreferences
-                                            );
-                                          }}
-                                        />
-                                      </td>
-                                    );
-                                  })}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      );
-                    }
-                  )}
-                </div>
-
-                {/* Preferred Time */}
-                {/* <div className="space-y-2 mt-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Preferred Time
+                    Area / Locality
                   </label>
                   <input
                     type="text"
+                    id="area"
                     className="w-full border rounded-md px-3 py-2 text-sm"
-                    placeholder="e.g., 4 PM - 6 PM"
-                    value={selectedMentor?.preferredTime || ""}
+                    placeholder="e.g., Tilak Nagar"
+                    value={selectedMentor?.location?.area || ""}
                     onChange={(e) =>
-                      updateField("preferredTime", e.target.value)
+                      updateField("location.area", e.target.value)
                     }
                   />
-                </div> */}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="city"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                    placeholder="e.g., Indore"
+                    value={selectedMentor?.location?.city || ""}
+                    onChange={(e) =>
+                      updateField("location.city", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="state"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    id="state"
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                    placeholder="e.g., Madhya Pradesh"
+                    value={selectedMentor?.location?.state || ""}
+                    onChange={(e) =>
+                      updateField("location.state", e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="teachingRange"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Teaching Range (km)
+                  </label>
+                  <input
+                    type="text"
+                    id="teachingRange"
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                    placeholder="e.g., 3 km"
+                    value={selectedMentor?.teachingRange || ""}
+                    onChange={(e) =>
+                      updateField("teachingRange", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+             
+              {/* Available Days */}
+              <div className="space-y-2 mt-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Available Days
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                  ].map((day) => (
+                    <label
+                      key={day}
+                      className="flex items-center text-sm gap-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedMentor?.availableDays?.includes(day)}
+                        onChange={(e) => {
+                          const updatedDays = e.target.checked
+                            ? [...(selectedMentor?.availableDays || []), day]
+                            : selectedMentor?.availableDays?.filter(
+                                (d) => d !== day
+                              );
+                          updateField("availableDays", updatedDays);
+                        }}
+                      />
+                      {day}
+                    </label>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="bg-white p-4 rounded-2xl shadow-sm mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
-                Teaching Preferences
-              </h3>
 
-              {Object.entries(selectedMentor?.teachingPreferences || {}).map(
-                ([level, classMap]) => {
-                  // Get unique subject list across all classes
-                  const allSubjects = Array.from(
-                    new Set(Object.values(classMap).flat())
-                  );
-
-                  return (
-                    <div key={level} className="mb-8 overflow-auto">
-                      <h4 className="text-md font-semibold text-blue-700 capitalize mb-3">
-                        {level}
-                      </h4>
-
-                      <table className="w-full min-w-[600px] text-sm border border-gray-300">
-                        <thead className="bg-blue-50">
-                          <tr>
-                            <th className="border px-3 py-2 text-left">
-                              Class
-                            </th>
-                            {allSubjects.map((subject) => (
-                              <th
-                                key={subject}
-                                className="border px-3 py-2 text-center"
-                              >
-                                {subject}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {Object.entries(classMap).map(
-                            ([className, subjectList]) => (
-                              <tr key={className}>
-                                <td className="border px-3 py-2 font-medium capitalize">
-                                  {className
-                                    .replace(/-/g, " to ")
-                                    .replace("class", "Class")}
-                                </td>
-                                {allSubjects.map((subject) => {
-                                  const isChecked =
-                                    subjectList.includes(subject);
-                                  return (
-                                    <td
-                                      key={`${className}-${subject}`}
-                                      className="border px-3 py-2 text-center"
-                                    >
-                                      <input
-                                        type="checkbox"
-                                        checked={isChecked}
-                                        onChange={(e) => {
-                                          const newPreferences = {
-                                            ...selectedMentor?.teachingPreferences,
-                                          };
-                                          const currentSubjects =
-                                            newPreferences[level][className] ||
-                                            [];
-
-                                          if (e.target.checked) {
-                                            // Add subject
-                                            newPreferences[level][className] = [
-                                              ...currentSubjects,
-                                              subject,
-                                            ];
-                                          } else {
-                                            // Remove subject
-                                            newPreferences[level][className] =
-                                              currentSubjects.filter(
-                                                (s) => s !== subject
-                                              );
-                                          }
-
-                                          updateField(
-                                            "teachingPreferences",
-                                            newPreferences
-                                          );
-                                        }}
-                                      />
-                                    </td>
-                                  );
-                                })}
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  );
-                }
-              )}
-            </div>
-
-            <div className="bg-white p-4 rounded-2xl shadow-sm mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
-                Teaching Preferences
-              </h3>
-
-              {/* Loop for each education level */}
-              {Object.entries(selectedMentor?.teachingPreferences || {}).map(
-                ([level, classMap]) => (
-                  <div key={level} className="mb-6">
-                    <h4 className="text-md font-semibold text-blue-700 capitalize mb-2">
-                      {level}
-                    </h4>
-
-                    {/* Loop for each class group */}
-                    {Object.entries(classMap).map(([className, subjects]) => (
-                      <div key={className} className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                          {className
-                            .replace(/-/g, " to ")
-                            .replace("class", "Class")}
-                        </label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                          {subjects.map((subject) => (
-                            <label
-                              key={subject}
-                              className="flex items-center gap-2 text-sm"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={
-                                  selectedMentor?.teachingPreferences?.[level]?.[
-                                    className
-                                  ]?.includes(subject) || false
-                                }
-                                onChange={(e) => {
-                                  const newPreferences = {
-                                    ...selectedMentor?.teachingPreferences,
-                                  };
-                                  const subjectList =
-                                    newPreferences[level][className] || [];
-
-                                  if (e.target.checked) {
-                                    // Add subject
-                                    newPreferences[level][className] = [
-                                      ...subjectList,
-                                      subject,
-                                    ];
-                                  } else {
-                                    // Remove subject
-                                    newPreferences[level][className] =
-                                      subjectList.filter((s) => s !== subject);
-                                  }
-
-                                  updateField(
-                                    "teachingPreferences",
-                                    newPreferences
-                                  );
-                                }}
-                              />
-                              {subject}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )
-              )}
-            </div>
+            {/* Teaching Preference */}
           </div>
+          <TeachingPreferenceMatrix
+            selectedMentor={selectedMentor}
+            updateField={(field, value) =>
+              setSelectedMentor((prev) => ({ ...prev, [field]: value }))
+            }
+          />
           <div className="flex justify-end gap-4 mt-6">
             <button
               onClick={() => setSelectedMentor(null)}

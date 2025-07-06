@@ -79,6 +79,17 @@ const AllMentor = () => {
   const [shareList, setShareList] = useState([]);
   const link =
     "https://homentor.onrender.com/selected-mentors?id=" + shareList.join(",");
+
+   const handleStatus = (mentorId, status) => {
+    axios
+      .put(`https://homentor-backend.onrender.com/api/mentor/${mentorId}`, {
+        status: status,
+      })
+      .then((res) => {
+        alert("User Status Updated");
+        getMentorData();
+      });
+  };
   return (
     <AdminLayout>
       <div className="p-6 bg-gray-50 min-h-screen">
@@ -232,12 +243,7 @@ const AllMentor = () => {
                     >
                       View
                     </button>
-                    {/* <button
-                      onClick={() => handleStatus(mentor._id, "Approved")}
-                      className="px-2 py-1 text-green-600 hover:underline"
-                    >
-                      Approve
-                    </button> */}
+                    
                     <button
                       onClick={() => handleStatus(mentor._id, "Rejected")}
                       className="px-2 py-1 text-red-600 hover:underline"
