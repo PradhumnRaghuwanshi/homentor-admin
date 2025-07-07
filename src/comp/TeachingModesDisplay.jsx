@@ -17,7 +17,7 @@ const TeachingModesDisplay = ({ mentorData, setSelectedMentor }) => {
           className="bg-yellow-50 border  gap-4 border-yellow-200 rounded-lg mx-4 p-4"
         >
           <h4 className="font-medium text-mentor-yellow-700 text-base mb-1">
-            {mode[0].replace(/^./, (c) => c.toUpperCase())} -
+            {mode[0]?.replace(/^./, (c) => c.toUpperCase())} -
           </h4>
 
           <div className="text-sm text-gray-800 flex gap-1 items-center">
@@ -33,7 +33,7 @@ const TeachingModesDisplay = ({ mentorData, setSelectedMentor }) => {
                   },
                 })
               }
-              value={mode[1]?.monthlyPrice.toLocaleString()}
+              value={mode[1]?.monthlyPrice?.toLocaleString()}
             ></input>
           </div>
         </div>
