@@ -13,26 +13,28 @@ import axios from "axios";
 
 
 export default function AdminDashboard() {
-  useEffect(()=>{fetchRoomData(); fetchTenantData(); fetchExpenseData()}, [])
+  useEffect(()=>{getMentorData()}, [])
   const [roomData, setRoomData] = useState([]);
-  const fetchRoomData = ()=>{
-    axios.get('http://localhost:5001/rooms').then((res)=> setRoomData(res.data.data)).catch((err)=> console.log(err))
-  }
+  
 
   const [tenantData, setTenantData] = useState([])
-  const fetchTenantData = ()=>{
-    axios.get('http://localhost:5001/users').then((res)=> setTenantData(res.data.data)).catch((err)=> console.log(err))
-  }
+ 
 
   const [expenseData, setExpenseData] = useState([])
-  const fetchExpenseData = ()=>{
-    axios.get('http://localhost:5001/expenses/current-month').then((res)=>{ setExpenseData(res.data.data); console.log(res.data.data)}).catch((err)=> console.log(err))
-  }
+  
+  const [mentorList, setMentorList] = useState([]);
+  const getMentorData = () => {
+    axios
+      .get("https://homentor-backend.onrender.com/api/mentor")
+      .then((res) => {
+        setMentorList(res.data.data);
+      });
+  };
 
   const stats = [
     {
-      label: "Total Monthly Revenue",
-      value: roomData.length,
+      label: "Total Mentor",
+      value: mentorList.length,
       icon: Users,
       color: "text-blue-600 bg-blue-100",
     },

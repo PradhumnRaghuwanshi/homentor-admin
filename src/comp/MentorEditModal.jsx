@@ -465,7 +465,7 @@ const MentorEditModal = ({
             </div>
             <TeachingModesDisplay
               mentorData={selectedMentor}
-              setSelectedMentor={selectedMentor}
+              setSelectedMentor={setSelectedMentor}
             />
             <div className="bg-white p-4 rounded-2xl shadow-sm mt-6 space-y-4">
               <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
