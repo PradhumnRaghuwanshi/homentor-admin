@@ -51,63 +51,79 @@ const CallAdmin = () => {
 
   return (
     <AdminLayout>
-    <div className="min-h-screen bg-gray-50">
-      {/* Dashboard Header */}
-      <div className="bg-homentor-blue text-white py-4 px-6 shadow-sm">
-        <div className="container-tight flex justify-between items-center">
-          <div className="flex items-center">
-            <Link to="/" className="mr-8">
+      <div className="min-h-screen bg-gray-50">
+        {/* Dashboard Header */}
+        <header className="bg-homentor-blue text-white shadow-md">
+          <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+            <Link to="/" className="flex items-center space-x-3">
               <img
                 src="/lovable-uploads/fd84ccc3-d993-4d2a-b179-a79cbae53518.png"
                 alt="Homentor Logo"
                 className="h-8"
               />
+              <span className="text-xl font-semibold">Homentor</span>
             </Link>
           </div>
-        </div>
-      </div>
+        </header>
 
-      {/* Dashboard Content */}
-      <div className="container-tight py-8">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2">
-          Mentor Dashboard
-        </h1>
-        <p className="text-gray-600 mb-8">
-          Manage your sessions, students, and earnings in one place.
-        </p>
+        {/* Dashboard Content */}
+        <main className="container mx-auto px-4 py-10">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            Mentor Dashboard
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Manage your sessions, students, and earnings in one place.
+          </p>
 
-        <table>
-          <thead>
-            <th>S. no.</th>
-            <th>Name</th>
-            <th>Contact Number</th>
-            <th>Time</th>
-            <th>Action</th>
-          </thead>
-          <tbody>
-            {callData.map((i, index) => (
-              <tr>
-                <td>{index + 1}</td>
-                <td>{i.name}</td>
-                <td>
-                  <a href={`tel:${i.phone}`}>{i.phone}</a>
-                </td>
-                <td>{formatDateTime(i.requestTime)}</td>
-                <td>
-                  <div>
-                    <input
-                      onChange={(e) => setMentorPhone(e.target.value)}
-                      placeholder="Enter Number"
-                    ></input>
-                    <button onClick={() => updateNumber(i)}>Save</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <div className="overflow-x-auto bg-white rounded-xl shadow-md p-6">
+            <table className="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+              <thead className="bg-gray-100 text-gray-800 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">S. No.</th>
+                  <th className="px-4 py-3 font-semibold">Name</th>
+                  <th className="px-4 py-3 font-semibold">Contact Number</th>
+                  <th className="px-4 py-3 font-semibold">Time</th>
+                  <th className="px-4 py-3 font-semibold">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {callData.map((i, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition">
+                    <td className="px-4 py-3">{index + 1}</td>
+                    <td className="px-4 py-3">{i.name}</td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={`tel:${i.phone}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {i.phone}
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      {formatDateTime(i.requestTime)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <input
+                          onChange={(e) => setMentorPhone(e.target.value)}
+                          placeholder="Enter Number"
+                          className="border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                          onClick={() => updateNumber(i)}
+                          className=" text-white px-4 py-1 rounded-lg bg-blue-600 transition"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </main>
       </div>
-    </div>
     </AdminLayout>
   );
 };

@@ -26,47 +26,13 @@ const MentorEditModal = ({
       return updated;
     });
   };
-
-  const toggleAvailableDay = (day) => {
-    setSelectedMentor((prev) => {
-      const updatedDays = prev.availableDays.includes(day)
-        ? prev.availableDays.filter((d) => d !== day)
-        : [...prev.availableDays, day];
-      return { ...prev, availableDays: updatedDays };
-    });
-  };
-
-  const updateTeachingMode = (mode, selected) => {
-    setSelectedMentor((prev) => {
-      const modes = { ...prev.teachingModes };
-      if (!modes[mode]) modes[mode] = { selected: false, monthlyPrice: 0 };
-      modes[mode].selected = selected;
-      return { ...prev, teachingModes: modes };
-    });
-  };
-
-  const updateTeachingPrice = (mode, price) => {
-    setSelectedMentor((prev) => {
-      const modes = { ...prev.teachingModes };
-      modes[mode].monthlyPrice = Number(price);
-      return { ...prev, teachingModes: modes };
-    });
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImg, setModalImg] = useState("");
 
   const handleSaveEdit = () => {
     setIsEditing(false);
     onSave(selectedMentor);
   };
-
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const allSubjects = [
-    "Mathematics",
-    "English",
-    "Hindi",
-    "Science",
-    "Social Science",
-    "Computer Science",
-  ];
 
   const handleUpdate = () => {
     axios
@@ -189,6 +155,25 @@ const MentorEditModal = ({
                 </div>
               </div>
             </div>
+            {/* Modal */}
+            {isModalOpen && (
+              <div className="fixed inset-0 z-50  flex items-center justify-center">
+                <div className="absolute w-[100%] h-[100vh] bg-black opacity-50"></div>
+                <div className="bg-white rounded-lg p-4 max-w-md w-full shadow-lg relative">
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+                  >
+                    ✕
+                  </button>
+                  <img
+                    src={modalImg}
+                    alt="Enlarged Profile"
+                    className="w-full max-h-[80vh] object-contain rounded"
+                  />
+                </div>
+              </div>
+            )}
             <div className="bg-white p-6 rounded-2xl shadow-md mt-6">
               <h3 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">
                 Documents & Media
@@ -208,14 +193,15 @@ const MentorEditModal = ({
                             alt="Profile"
                             className=" h-16  object-cover border"
                           />
-                          <a
-                            href={selectedMentor?.profilePhoto}
-                            target="_blank"
-                            rel="noreferrer"
+                          <button
+                            onClick={() => {
+                              setModalImg(selectedMentor?.profilePhoto);
+                              setIsModalOpen(true);
+                            }}
                             className="text-blue-600 underline text-sm"
                           >
                             View Photo
-                          </a>
+                          </button>
                         </div>
                       ) : (
                         <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
@@ -251,14 +237,15 @@ const MentorEditModal = ({
                           alt="MentorID"
                           className="h-16 object-cover border"
                         />
-                        <a
-                          href={selectedMentor?.profilePhoto}
-                          target="_blank"
-                          rel="noreferrer"
+                        <button
+                          onClick={() => {
+                            setModalImg(selectedMentor?.mentorId);
+                            setIsModalOpen(true);
+                          }}
                           className="text-blue-600 underline text-sm"
                         >
-                          View ID
-                        </a>
+                          View Photo
+                        </button>
                       </div>
                     ) : (
                       <span className="text-sm text-gray-500">No ID</span>
@@ -285,14 +272,15 @@ const MentorEditModal = ({
                   </label>
                   <div className="flex items-center justify-between bg-gray-50 p-2 rounded-lg border">
                     {selectedMentor?.cv ? (
-                      <a
-                        href={selectedMentor?.cv}
-                        target="_blank"
-                        rel="noreferrer"
+                      <button
+                        onClick={() => {
+                          setModalImg(selectedMentor?.mentorId);
+                          setIsModalOpen(true);
+                        }}
                         className="text-blue-600 underline text-sm"
                       >
-                        View CV
-                      </a>
+                        View Photo
+                      </button>
                     ) : (
                       <span className="text-sm text-gray-500">
                         No file uploaded
@@ -696,7 +684,7 @@ const MentorEditModal = ({
                   />
                 </div>
               </div>
-             
+
               {/* Available Days */}
               <div className="space-y-2 mt-4">
                 <label className="block text-sm font-medium text-gray-700">
