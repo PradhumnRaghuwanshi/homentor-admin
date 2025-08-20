@@ -1,10 +1,10 @@
-// AllMentorCard.tsx
+// AllOrdersCard.tsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../comp/AdminLayout";
 import MentorEditModal from "../comp/MentorEditModal";
 
-const AllMentor = () => {
+const AllOrders = () => {
   const [selectedMentor, setSelectedMentor] = useState(null);
   useEffect(() => {
     getMentorData();
@@ -78,7 +78,7 @@ const AllMentor = () => {
   };
   const [shareList, setShareList] = useState([]);
   const link =
-    "https://homentor.in/selected-mentors?id=" + shareList.join(",");
+    "https://homentor.onrender.com/selected-mentors?id=" + shareList.join(",");
 
    const handleStatus = (mentorId, status) => {
     axios
@@ -271,4 +271,4 @@ const AllMentor = () => {
   );
 };
 
-export default AllMentor;
+export default AllOrders;
