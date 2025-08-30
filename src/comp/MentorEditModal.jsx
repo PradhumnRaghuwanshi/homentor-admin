@@ -47,6 +47,37 @@ const MentorEditModal = ({
         alert("User Status Updated");
       });
   };
+
+  const handleFileUpload = async (field, event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "homentor"); // replace with your Cloudinary preset
+
+  try {
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/dpveehhtq/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.secure_url) {
+      setSelectedMentor((prev) => ({
+        ...prev,
+        [field]: data.secure_url, // store Cloudinary URL
+      }));
+    }
+  } catch (error) {
+    console.error("Cloudinary upload failed:", error);
+  }
+};
+
   return (
     selectedMentor && (
       <div className="fixed inset-0 z-50 flex items-center justify-center">
