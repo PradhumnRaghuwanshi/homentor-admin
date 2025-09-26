@@ -6,6 +6,7 @@ import AllMentor from "./pages/AllMentor";
 import Setting from "./pages/Setting";
 import CallAdmin from "./pages/CallAdmin";
 import AllOrders from "./pages/AllOrders";
+import AdminBookingsPage from "./pages/AdminBookingsPage";
 CallAdmin
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Route path="/all-orders" element={<AllOrders/>}></Route>
       <Route path="/calling-sheet" element={<CallAdmin/>}></Route>
       <Route path="/setting" element={<Setting/>}></Route>
+      <Route path="//class-booking" element={<AdminBookingsPage/>}></Route>
 
       </Routes>
     </BrowserRouter>

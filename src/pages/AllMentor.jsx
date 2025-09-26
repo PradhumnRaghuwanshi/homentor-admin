@@ -9,6 +9,7 @@ const AllMentor = () => {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [selectedBookingMentor, setSelectedBookingMentor] = useState(null);
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // 🔍 new state
 
   useEffect(() => {
     getMentorData();
@@ -22,6 +23,9 @@ const AllMentor = () => {
         setMentorList(res.data.data.reverse());
       });
   };
+   const filteredMentors = mentorList.filter((mentor) =>
+    mentor.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const [isAdminRank, setIsAdminRank] = useState(false);
   const handleAdminRanking = (mentorId, rank) => {
@@ -96,9 +100,19 @@ const AllMentor = () => {
   return (
     <AdminLayout>
       <div className="p-6 bg-gray-50 min-h-screen">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">
-          All Approved Mentors
-        </h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-3xl font-bold text-gray-800">
+            All Approved Mentors
+          </h2>
+
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+          />
+        </div>
         {shareList.length ? (
           <button
             className="w-[200px] m-1  mb-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow transition duration-200 active:scale-95"
@@ -132,7 +146,7 @@ const AllMentor = () => {
               </tr>
             </thead>
             <tbody>
-              {mentorList.map((mentor, index) => (
+              {filteredMentors.map((mentor, index) => (
                 <tr key={mentor._id} className="hover:bg-gray-50 border-t">
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">

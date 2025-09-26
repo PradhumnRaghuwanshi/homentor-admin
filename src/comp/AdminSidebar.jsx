@@ -22,7 +22,7 @@ const navLinks = [
   { label: "All Orders", icon: FileWarning, to: "/all-orders" },
   { label: "Calling Sheet", icon: ScrollText, to: "/calling-sheet" },
   { label: "Utilities", icon: Zap, to: "/Utilities" },
-  // { label: "Mess", icon: Utensils, to: "/Mess" },
+  { label: "Class Booking", icon: Utensils, to: "/class-booking" },
   // { label: "Notices", icon: ScrollText, to: "/Notices" },
   { label: "Settings", icon: Settings, to: "/setting" },
 ];
