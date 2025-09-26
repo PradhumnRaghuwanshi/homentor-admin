@@ -3,9 +3,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../comp/AdminLayout";
 import MentorEditModal from "../comp/MentorEditModal";
+import DemoBookingModal from "../comp/DemoBookingModal";
 
 const AllMentor = () => {
   const [selectedMentor, setSelectedMentor] = useState(null);
+  const [selectedBookingMentor, setSelectedBookingMentor] = useState(null);
+  const [showDemoModal, setShowDemoModal] = useState(false);
+
   useEffect(() => {
     getMentorData();
   }, []);
@@ -77,10 +81,9 @@ const AllMentor = () => {
     }
   };
   const [shareList, setShareList] = useState([]);
-  const link =
-    "https://homentor.in/selected-mentors?id=" + shareList.join(",");
+  const link = "https://homentor.in/selected-mentors?id=" + shareList.join(",");
 
-   const handleStatus = (mentorId, status) => {
+  const handleStatus = (mentorId, status) => {
     axios
       .put(`https://homentor-backend.onrender.com/api/mentor/${mentorId}`, {
         status: status,
@@ -105,6 +108,14 @@ const AllMentor = () => {
             Copy Share Link
           </button>
         ) : null}
+
+        {showDemoModal && selectedBookingMentor && (
+          <DemoBookingModal
+            mentor={selectedBookingMentor}
+            getMentorData={getMentorData}
+            onClose={() => setShowDemoModal(false)}
+          />
+        )}
         <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
           <table className="min-w-full text-sm text-gray-700">
             <thead className="bg-gray-100 text-xs uppercase text-gray-500">
@@ -116,6 +127,7 @@ const AllMentor = () => {
                 <th className="px-4 py-3">Salary</th>
                 <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3">Display</th>
+                <th className="px-4 py-3">Booking</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -199,7 +211,12 @@ const AllMentor = () => {
                         />
                         {isModified && (
                           <button
-                            onClick={() => {handleSave(mentor);setPrice(mentor?.teachingModes?.homeTuition?.monthlyPrice)}}
+                            onClick={() => {
+                              handleSave(mentor);
+                              setPrice(
+                                mentor?.teachingModes?.homeTuition?.monthlyPrice
+                              );
+                            }}
                             className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
                           >
                             Update
@@ -236,6 +253,17 @@ const AllMentor = () => {
                       />
                     </button>
                   </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        setSelectedBookingMentor(mentor);
+                        setShowDemoModal(true);
+                      }}
+                      className="px-2 py-1 text-green-600 hover:underline"
+                    >
+                      Book Demo
+                    </button>
+                  </td>
                   <td className="px-4 py-3 flex gap-2 text-xs">
                     <button
                       onClick={() => setSelectedMentor(mentor)}
@@ -243,7 +271,7 @@ const AllMentor = () => {
                     >
                       View
                     </button>
-                    
+
                     <button
                       onClick={() => handleStatus(mentor._id, "Rejected")}
                       className="px-2 py-1 text-red-600 hover:underline"
