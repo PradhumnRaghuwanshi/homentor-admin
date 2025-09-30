@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AdminLayout from "../comp/AdminLayout";
 import DirectBookingForm from "../comp/DirectBookingForm";
+import DemoControlPanel from "../comp/DemoControlPanel";
 
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -64,6 +65,8 @@ export default function AdminBookingsPage() {
           ➕ Book Class
         </button>
       </div>
+
+      <DemoControlPanel></DemoControlPanel>
 
       {loading ? (
         <p className="text-gray-500">Loading bookings...</p>

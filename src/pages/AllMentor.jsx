@@ -141,7 +141,6 @@ const AllMentor = () => {
                 <th className="px-4 py-3">Salary</th>
                 <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3">Display</th>
-                <th className="px-4 py-3">Booking</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -267,17 +266,7 @@ const AllMentor = () => {
                       />
                     </button>
                   </td>
-                  <td>
-                    <button
-                      onClick={() => {
-                        setSelectedBookingMentor(mentor);
-                        setShowDemoModal(true);
-                      }}
-                      className="px-2 py-1 text-green-600 hover:underline"
-                    >
-                      Book Demo
-                    </button>
-                  </td>
+                  
                   <td className="px-4 py-3 flex gap-2 text-xs">
                     <button
                       onClick={() => setSelectedMentor(mentor)}

@@ -37,6 +37,7 @@ export default function DirectBookingForm() {
         duration: "",
         amount: "",
         paymentMode: "cash",
+        phone: ""
       });
     } catch (err) {
       console.error(err);
@@ -74,6 +75,15 @@ export default function DirectBookingForm() {
           </option>
         ))}
       </select>
+
+      {/* Phone Number */}
+      <input
+        type="text"
+        placeholder="Phone Number"
+        value={formData.phone}
+        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+        className="w-full border rounded-lg px-3 py-2 mb-3 focus:ring-2 focus:ring-blue-500"
+      />
 
       {/* Subject */}
       <input
