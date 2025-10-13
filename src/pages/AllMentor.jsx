@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../comp/AdminLayout";
 import MentorEditModal from "../comp/MentorEditModal";
 import DemoBookingModal from "../comp/DemoBookingModal";
+import BackupTeacherModal from "../comp/BackupTeacherModal";
 
 const AllMentor = () => {
+  const [showBackupModal, setShowBackupModal] = useState(false);
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [selectedBookingMentor, setSelectedBookingMentor] = useState(null);
   const [showDemoModal, setShowDemoModal] = useState(false);
@@ -14,7 +16,6 @@ const AllMentor = () => {
   useEffect(() => {
     getMentorData();
   }, []);
-  const [showModal, setShowModal] = useState(false);
   const [mentorList, setMentorList] = useState([]);
   const getMentorData = () => {
     axios
@@ -23,11 +24,10 @@ const AllMentor = () => {
         setMentorList(res.data.data.reverse());
       });
   };
-   const filteredMentors = mentorList.filter((mentor) =>
+  const filteredMentors = mentorList.filter((mentor) =>
     mentor.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const [isAdminRank, setIsAdminRank] = useState(false);
   const handleAdminRanking = (mentorId, rank) => {
     axios
       .put(`https://homentor-backend.onrender.com/api/mentor/${mentorId}`, {
@@ -59,9 +59,6 @@ const AllMentor = () => {
       });
   };
   const [editData, setEditData] = useState({ ...selectedMentor });
-  const updateField = (field, value) => {
-    setEditData((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleSaveEdit = () => {
     // 🔄 Make an API call here to save `editData`
@@ -130,6 +127,16 @@ const AllMentor = () => {
             onClose={() => setShowDemoModal(false)}
           />
         )}
+
+        {showBackupModal && selectedMentor && (
+          <BackupTeacherModal
+            mentor={selectedMentor}
+            mentorList={mentorList}
+            onClose={() => setShowBackupModal(false)}
+            getMentorData={getMentorData}
+          />
+        )}
+
         <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
           <table className="min-w-full text-sm text-gray-700">
             <thead className="bg-gray-100 text-xs uppercase text-gray-500">
@@ -140,6 +147,7 @@ const AllMentor = () => {
                 <th className="px-4 py-3">Ranking</th>
                 <th className="px-4 py-3">Salary</th>
                 <th className="px-4 py-3">Location</th>
+                <th className="px-4 py-3">Back Up</th>
                 <th className="px-4 py-3">Display</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
@@ -252,6 +260,17 @@ const AllMentor = () => {
                   </td>
                   <td className="px-4 py-3">
                     <button
+                      onClick={() => {
+                        setSelectedMentor(mentor);
+                        setShowBackupModal(true);
+                      }}
+                      className="px-2 py-1 text-purple-600 hover:underline"
+                    >
+                      Backup Teachers
+                    </button>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
                       onClick={() => handleToggle(mentor)}
                       className={`w-12 h-6 rounded-full p-1 flex items-center transition ${
                         mentor.showOnWebsite ? "bg-green-500" : "bg-gray-300"
@@ -266,7 +285,7 @@ const AllMentor = () => {
                       />
                     </button>
                   </td>
-                  
+
                   <td className="px-4 py-3 flex gap-2 text-xs">
                     <button
                       onClick={() => setSelectedMentor(mentor)}
@@ -289,7 +308,7 @@ const AllMentor = () => {
         </div>
 
         {/* You already have a nice modal; just ensure these: */}
-        {selectedMentor && (
+        {selectedMentor && !showBackupModal && (
           <MentorEditModal
             getMentorData={getMentorData}
             onSave={handleSaveEdit}
