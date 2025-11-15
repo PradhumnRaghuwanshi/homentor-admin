@@ -3,6 +3,7 @@ import axios from "axios";
 import AdminLayout from "../comp/AdminLayout";
 import DirectBookingForm from "../comp/DirectBookingForm";
 import DemoControlPanel from "../comp/DemoControlPanel";
+import ClassRecordView from "../comp/ClassRecordView";
 
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -26,11 +27,13 @@ export default function AdminBookingsPage() {
     }
   };
 
-   const handleDelete = async (id) => {
+  const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
 
     try {
-      await axios.delete(`https://homentor-backend.onrender.com/api/class-bookings/${id}`);
+      await axios.delete(
+        `https://homentor-backend.onrender.com/api/class-bookings/${id}`
+      );
       setBookings(bookings.filter((b) => b._id !== id));
     } catch (err) {
       console.error("Error deleting booking:", err);
@@ -38,7 +41,38 @@ export default function AdminBookingsPage() {
     }
   };
 
-   const getStatusStyle = (status) => {
+  // ------------ ADMIN APPROVE TOGGLE --------------
+  const handleAdminApprove = async (id, checked) => {
+    try {
+      const res = await axios.post(
+        `https://homentor-backend.onrender.com/api/class-bookings/${id}/admin-approve`,
+        { approved: checked }
+      );
+
+      setBookings((prev) =>
+        prev.map((b) =>
+          b._id === id ? { ...b, adminApproved: checked } : b
+        )
+      );
+    } catch (err) {
+      alert("Failed to update approval");
+    }
+  };
+
+  // ------------ PARENT COMPLETION -----------------
+  const handleParentToggle = async (id) => {
+    try {
+      const res = await axios.post(
+        `https://homentor-backend.onrender.com/api/class-bookings/${id}/parent-complete`
+      );
+
+      fetchBookings(); // refresh state
+    } catch (err) {
+      alert(err?.response?.data?.message || "Error updating parent status");
+    }
+  };
+
+  const getStatusStyle = (status) => {
     switch (status) {
       case "scheduled":
         return "bg-green-100 text-green-800";
@@ -55,103 +89,152 @@ export default function AdminBookingsPage() {
 
   return (
     <AdminLayout>
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">📚 All Bookings</h1>
-        <button
-          onClick={() => setOpen(true)}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-        >
-          ➕ Book Class
-        </button>
-      </div>
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">📚 All Bookings</h1>
+          <button
+            onClick={() => setOpen(true)}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            ➕ Book Class
+          </button>
+        </div>
 
-      <DemoControlPanel></DemoControlPanel>
+        <DemoControlPanel />
 
-      {loading ? (
-        <p className="text-gray-500">Loading bookings...</p>
-      ) : bookings.length === 0 ? (
-        <p className="text-gray-500">No bookings found.</p>
-      ) : (
-        <div className="overflow-x-auto w-full bg-white rounded-lg shadow-md border">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2">Mentor</th>
-                <th className="px-4 py-2">Student</th>
-                <th className="px-4 py-2">Class</th>
-                <th className="px-4 py-2">School</th>
-                <th className="px-4 py-2">Subject</th>
-                <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2">Time</th>
-                <th className="px-4 py-2">Duration</th>
-                <th className="px-4 py-2">Price</th>
-                <th className="px-4 py-2">Status</th>
-                 <th className="px-3 py-2">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bookings.map((b) => (
-                <tr key={b._id} className="border-b">
-                  <td className="px-4 py-2">{b.mentor?.fullName || "N/A"}</td>
-                  <td className="px-4 py-2">{b.studentName}</td>
-                  <td className="px-4 py-2">{b.class}</td>
-                  <td className="px-4 py-2">{b.school}</td>
-                  <td className="px-4 py-2">{b.subject}</td>
-                  <td className="px-4 py-2">
-                    {b.scheduledDate
-                      ? new Date(b.scheduledDate).toLocaleDateString("en-IN", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })
-                      : "N/A"}
-                  </td>
-                  <td className="px-4 py-2">{b.scheduledTime || "N/A"}</td>
-                  <td className="px-4 py-2">{b.duration || "N/A"}</td>
-                  <td className="px-4 py-2">₹{b.price}</td>
-                  <td className="px-4 py-2 border">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusStyle(
-                        b.status
-                      )}`}
-                    >
-                      {b.status}
-                    </span>
-                  </td>
-                   <td className="px-3 py-2">
-                    <button
-                      onClick={() => handleDelete(b._id)}
-                      className="px-3 py-1 text-xs font-semibold text-white bg-red-500 rounded hover:bg-red-600"
-                    >
-                      ❌ Delete
-                    </button>
-                  </td>
+        {loading ? (
+          <p className="text-gray-500">Loading bookings...</p>
+        ) : bookings.length === 0 ? (
+          <p className="text-gray-500">No bookings found.</p>
+        ) : (
+          <div className="overflow-x-auto w-full bg-white rounded-lg shadow-md border">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-2">Booking ID</th>
+                  <th className="px-4 py-2">Mentor</th>
+                  <th className="px-4 py-2">Student</th>
+                  <th className="px-4 py-2">Classes Done</th>
+                  <th className="px-4 py-2">Fees</th>
+                  <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Approve</th>
+                  <th className="px-4 py-2">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {/* Modal for Booking Form */}
-      {open && (
-        <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 z-50">
-          <div className="bg-black opacity-50 absolute w-full h-[100vh]"></div>  
-          <div className="bg-white p-6 rounded-xl w-full max-w-lg relative shadow-lg">
-            {/* Close Button */}
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-            >
-              ✕
-            </button>
+              </thead>
 
-            {/* Direct Booking Form */}
-            <DirectBookingForm />
+              <tbody>
+                {bookings.map((b) => (
+                  <tr key={b._id} className="border-b">
+
+                    {/* Booking ID + Parent Approved badge */}
+                    <td className="px-4 py-2 font-mono text-xs flex flex-col gap-1">
+                      {b._id}
+
+                      {b.parentCompletion && (
+                        <span className="text-green-600 text-[10px] font-semibold bg-green-100 px-2 py-[2px] rounded">
+                          Parent Approved
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Mentor Name + Phone */}
+                    <td className="px-4 py-2 text-xs">
+                      <div className="font-semibold">{b.mentor?.fullName}</div>
+                      <div className="text-green-600 text-[10px] bg-green-100 px-2 py-[2px] rounded w-fit">
+                        {b.mentor?.phone}
+                      </div>
+                    </td>
+
+                    {/* Student Name */}
+                    <td className="px-4 py-2 flex flex-col text-xs">
+                      <span className="font-semibold">{b.studentName || "N/A"}</span>
+
+                      <span className="text-blue-600 bg-blue-100 px-2 py-[2px] rounded w-fit text-[10px] mt-1">
+                        {b.parent?.phone || "N/A"}
+                      </span>
+                    </td>
+
+                    {/* Classes Completed */}
+                    <td className="px-4 py-2">
+                      <label>{(b.progress || 0)} / {b.duration || 22}</label>
+                      <br></br>
+                      <ClassRecordView classBooking={b} />
+                      
+                    </td>
+
+                    {/* Fees */}
+                    <td className="px-4 py-2">
+                      <label className={`${b.progress == b.duration ? "text-green-600" : "text-orange-600"}`}>
+                        ₹{((b.mentor.teachingModes.homeTuition.monthlyPrice/22) * b.progress).toFixed(0) }
+                      </label>
+                       /
+                      ₹{b.mentor.teachingModes.homeTuition.monthlyPrice + b.mentor.teachingModes.homeTuition.margin }
+                      </td>
+
+                    {/* Status */}
+                    <td className="px-4 py-2">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusStyle(
+                          b.status
+                        )}`}
+                      >
+                        {b.status}
+                      </span>
+                    </td>
+
+                    {/* Admin Approve Checkbox */}
+                    <td className="px-4 py-2">
+                      <input
+                        type="checkbox"
+                        checked={b.adminApproved || false}
+                        onChange={(e) =>
+                          handleAdminApprove(b._id, e.target.checked)
+                        }
+                      />
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-4 py-2 flex gap-2">
+                      <button
+                        onClick={() => alert("Open booking view modal")}
+                        className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                      >
+                        View
+                      </button>
+
+
+                      <button
+                        onClick={() => handleDelete(b._id)}
+                        className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </td>
+
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Modal */}
+        {open && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-black opacity-50 absolute w-full h-full"></div>
+            <div className="bg-white p-6 rounded-xl w-full max-w-lg relative shadow-lg">
+              <button
+                onClick={() => setOpen(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+              >
+                ✕
+              </button>
+
+              <DirectBookingForm />
+            </div>
+          </div>
+        )}
+      </div>
     </AdminLayout>
   );
 }
