@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const BackupTeacherModal = ({ mentor, mentorList, onClose, getMentorData }) => {
+ 
   const [selectedBackups, setSelectedBackups] = useState(
     mentor.backupMentors || []
   );
@@ -19,11 +20,15 @@ const BackupTeacherModal = ({ mentor, mentorList, onClose, getMentorData }) => {
   const saveBackupMentors = () => {
     axios
       .put(`https://homentor-backend.onrender.com/api/mentor/${mentor._id}`, {
-        backupMentors: selectedBackups,
+        backupTeachers: selectedBackups,
       })
-      .then(() => {
+      .then((res) => {
+        console.log(res.data)
         getMentorData();
         onClose();
+      })
+      .catch((err) => {
+        console.log(err)
       });
   };
 
