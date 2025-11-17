@@ -157,19 +157,25 @@ export default function AdminBookingsPage() {
                     {/* Classes Completed */}
                     <td className="px-4 py-2">
                       <label>{(b.progress || 0)} / {b.duration || 22}</label>
+                      {/* Demo Badge */}
+                      {b.isDemo && (
+                        <Badge className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
+                          Demo
+                        </Badge>
+                      )}
                       <br></br>
                       <ClassRecordView classBooking={b} />
-                      
+
                     </td>
 
                     {/* Fees */}
                     <td className="px-4 py-2">
                       <label className={`${b.progress == b.duration ? "text-green-600" : "text-orange-600"}`}>
-                        ₹{((b.mentor.teachingModes.homeTuition.monthlyPrice/22) * b.progress).toFixed(0) }
+                        ₹{((b.mentor.teachingModes.homeTuition.monthlyPrice / 22) * b.progress).toFixed(0)}
                       </label>
-                       /
-                      ₹{b.mentor.teachingModes.homeTuition.monthlyPrice + b.mentor.teachingModes.homeTuition.margin }
-                      </td>
+                      /
+                      ₹{b.mentor.teachingModes.homeTuition.monthlyPrice + b.mentor.teachingModes.homeTuition.margin}
+                    </td>
 
                     {/* Status */}
                     <td className="px-4 py-2">
