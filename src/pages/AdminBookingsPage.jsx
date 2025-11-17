@@ -4,6 +4,7 @@ import AdminLayout from "../comp/AdminLayout";
 import DirectBookingForm from "../comp/DirectBookingForm";
 import DemoControlPanel from "../comp/DemoControlPanel";
 import ClassRecordView from "../comp/ClassRecordView";
+import { Badge } from "lucide-react";
 
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState([]);
