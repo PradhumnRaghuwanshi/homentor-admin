@@ -142,6 +142,7 @@ const AllMentor = () => {
             <thead className="bg-gray-100 text-xs uppercase text-gray-500">
               <tr>
                 <th className="px-4 py-3">S.no</th>
+                <th className="px-4 py-3">Call</th>
                 <th className="px-4 py-3">Photo</th>
                 <th className="px-4 py-3">Name & Phone</th>
                 <th className="px-4 py-3">Ranking</th>
@@ -156,6 +157,34 @@ const AllMentor = () => {
               {filteredMentors.map((mentor, index) => (
                 <tr key={mentor._id} className="hover:bg-gray-50 border-t">
                   <td className="px-4 py-3">{index + 1}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-2">
+
+                      {/* Checkbox → Direct or Company */}
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={mentor?.callRouting?.mode == "mentor"}
+                          onChange={(e) => {
+                            const isDirect = mentor?.callRouting?.mode ;
+                            axios
+                              .put(
+                                `https://homentor-backend.onrender.com/api/mentor/${mentor._id}`,
+                                {
+                                  callRouting: {
+                                    mode: isDirect == "mentor" ? "company" : "mentor",
+                                  },
+                                }
+                              )
+                              .then(() => getMentorData());
+                          }}
+                        />
+                        
+                      </label>
+                    </div>
+                  </td>
+
+
                   <td className="px-4 py-3">
                     <img
                       src={mentor.profilePhoto}
@@ -272,16 +301,14 @@ const AllMentor = () => {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => handleToggle(mentor)}
-                      className={`w-12 h-6 rounded-full p-1 flex items-center transition ${
-                        mentor.showOnWebsite ? "bg-green-500" : "bg-gray-300"
-                      }`}
+                      className={`w-12 h-6 rounded-full p-1 flex items-center transition ${mentor.showOnWebsite ? "bg-green-500" : "bg-gray-300"
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${
-                          mentor.showOnWebsite
-                            ? "translate-x-6"
-                            : "translate-x-0"
-                        }`}
+                        className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${mentor.showOnWebsite
+                          ? "translate-x-6"
+                          : "translate-x-0"
+                          }`}
                       />
                     </button>
                   </td>

@@ -88,6 +88,12 @@ export default function AdminBookingsPage() {
     }
   };
 
+  function formatProgress(minutes) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${h}:${m.toString().padStart(2, "0")}`;
+}
+
   return (
     <AdminLayout>
       <div className="min-h-screen bg-gray-50 p-6">
@@ -157,7 +163,7 @@ export default function AdminBookingsPage() {
 
                     {/* Classes Completed */}
                     <td className="px-4 py-2">
-                      <label>{(b.progress || 0)} / {b.duration || 22}</label>
+                      <label>{formatProgress(b.progress || 0)} / {b.duration || 22}</label>
                       {/* Demo Badge */}
                       {b.isDemo && (
                         <Badge className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
