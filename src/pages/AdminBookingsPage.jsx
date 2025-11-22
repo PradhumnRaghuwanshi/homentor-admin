@@ -167,7 +167,7 @@ export default function AdminBookingsPage() {
                     <td className="px-4 py-2">
                       <label>{formatProgress(b.progress || 0)} / {b.duration || 22}</label>
                       {/* Demo Badge */}
-                      {classItem.demoStatus == "running" ? (
+                      {b.demoStatus == "running" ? (
                 <label className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
                   Demo
                 </label>
