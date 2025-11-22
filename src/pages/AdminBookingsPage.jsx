@@ -89,10 +89,10 @@ export default function AdminBookingsPage() {
   };
 
   function formatProgress(minutes) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${h}:${m.toString().padStart(2, "0")}`;
-}
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}:${m.toString().padStart(2, "0")}`;
+  }
 
 
 
@@ -168,12 +168,12 @@ export default function AdminBookingsPage() {
                       <label>{formatProgress(b.progress || 0)} / {b.duration || 22}</label>
                       {/* Demo Badge */}
                       {b.demoStatus == "running" ? (
-                <label className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
-                  Demo
-                </label>
-              ) : classItem.demoStatus == "completed" ? <label className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
-                  Demo Completed
-                </label> : null }
+                        <label className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
+                          Demo
+                        </label>
+                      ) : b.demoStatus == "completed" ? <label className="bg-purple-100 text-purple-700 border border-purple-300 ml-2">
+                        Demo Completed
+                      </label> : null}
                       <br></br>
                       <ClassRecordView classBooking={b} />
 
@@ -182,7 +182,7 @@ export default function AdminBookingsPage() {
                     {/* Fees */}
                     <td className="px-4 py-2">
                       <label className={`${b.progress == b.duration ? "text-green-600" : "text-orange-600"}`}>
-                        ₹ {b.price == 0 ? 0 : ((b.mentor.teachingModes.homeTuition.monthlyPrice / 22) * b.progress/60).toFixed(0)} 
+                        ₹ {b.price == 0 ? 0 : ((b.mentor.teachingModes.homeTuition.monthlyPrice / 22) * b.progress / 60).toFixed(0)}
                       </label>
                       /
                       ₹{b.price}
